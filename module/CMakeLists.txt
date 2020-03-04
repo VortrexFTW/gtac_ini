@@ -1,7 +1,5 @@
 disable_rtti()
 
-INCLUDE_DIRECTORIES("../../extern/ini")
-
 file(GLOB_RECURSE SOURCES *.cpp *.h)
 
 if(MSVC)

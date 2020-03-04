@@ -12,6 +12,7 @@ include(j-generic)
 # include the SDK
 include_directories("sdk/include")
 include_directories("sdk/Helper")
+include_directories("extern/ini")
 
 add_subdirectory(module)
 
