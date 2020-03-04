@@ -2,7 +2,7 @@
 
 INI module for GTA Connected
 
-Originally created by Lucx. Updated by Vortrex to support the new module SDK
+Originally created by Lyuu17. Updated by Vortrex to support the new module SDK
 
 Script example:
  ```
