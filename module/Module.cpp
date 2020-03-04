@@ -1,12 +1,16 @@
-#include "StdInc.h"
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <cstring>
 
-#include <SDHHelper.h>
 #include <ini.h>
 
+#include <SDKHelper.h>
+
+using namespace std;
+
 // The modules internal name (Also used for the namespace name)
-MODULE_MAIN("mysql");
+MODULE_MAIN("ini");
 
 SDK::Class g_pINIFileClass;
 
@@ -66,30 +70,36 @@ void ModuleRegister()
 		State.CheckNumber(0, err);
 
 		switch (err) {
-			case SI_OK:
+			case SI_OK: {
 				SDK::StringValue Value("ok", 2);
 				State.Return(Value);
-				break;
-			case SI_UPDATED:
+			}
+			break;
+			case SI_UPDATED: {
 				SDK::StringValue Value("updated", 7);
 				State.Return(Value);			
-				break;
-			case SI_INSERTED:
+			}
+			break;
+			case SI_INSERTED: {
 				SDK::StringValue Value("inserted", 8);
 				State.Return(Value);						
-				break;
-			case SI_FAIL:
+			}
+			break;
+			case SI_FAIL: {
 				SDK::StringValue Value("fail", 4);
 				State.Return(Value);				
-				break;
-			case SI_NOMEM:
+			}
+			break;
+			case SI_NOMEM: {
 				SDK::StringValue Value("nomem", 5);
 				State.Return(Value);	
-				break;
-			case SI_FILE:
+			}
+			break;
+			case SI_FILE: {
 				SDK::StringValue Value("file", 4);
 				State.Return(Value);	
-				break;
+			}
+			break;
 		}
 
 		return true;
@@ -134,12 +144,13 @@ void ModuleRegister()
 		auto pThis = State.CheckThis<CSimpleIni, g_pINIFileClass>();		
 		
 		if (!pThis) {
-			return pState->SetError("[INI] Can't reset INI (missing pointer)");
+			return pState->SetError("[INI] Can't delete INI entry (missing pointer)");
 		}
 
 		const char *szSection = State.CheckString(0);
 		const char *szKey = State.CheckString(1);		
-		bool *bRemoveEmpty = State.CheckBoolean(2);
+		bool bRemoveEmpty;
+		State.CheckBoolean(2, bRemoveEmpty);
 
 		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
@@ -171,7 +182,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't get INI empty state (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't get INI empty state (missing pointer)");
 		}
@@ -201,7 +212,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't get INI multi-key state (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't get INI multi-key state (missing pointer)");
 		}
@@ -231,7 +242,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't get INI multi-line state (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't get INI multi-line state (missing pointer)");
 		}
@@ -261,7 +272,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't get INI unicode state (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't get INI unicode state (missing pointer)");
 		}
@@ -291,12 +302,12 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't get INI using-spaces state (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't get INI using spaces state (missing pointer)");
 		}
 
-		bool result = ini->IsUsingSpaces();
+		bool result = ini->UsingSpaces();
 		if (result) {
 			SDK::BooleanValue Value(true);
 			State.Return(Value);
@@ -321,12 +332,13 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't set INI unicode state (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't set INI unicode state (missing pointer)");
 		}
 
-		bool *bUnicode = State.CheckBoolean(0);
+		bool bUnicode;
+		State.CheckBoolean(0, bUnicode);
 		
 		ini->SetUnicode(bUnicode);
 
@@ -349,7 +361,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
@@ -377,7 +389,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
@@ -407,7 +419,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
@@ -415,15 +427,12 @@ void ModuleRegister()
 		const char *szSection = State.CheckString(0);
 		const char *szKey = State.CheckString(1);
 		bool bDefaultValue = false;
-		
-		if(!State.CheckBoolean(2)) {
-			bDefaultValue = false;
-		}
+		State.CheckBoolean(2, bDefaultValue);
 		
 		bool bResult = ini->GetDoubleValue(szSection, szKey, bDefaultValue);
 
 		SDK::BooleanValue Value(bResult);
-		State.Return(bResult);
+		State.Return(Value);
 
 		return true;
 
@@ -441,7 +450,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
@@ -449,15 +458,12 @@ void ModuleRegister()
 		const char *szSection = State.CheckString(0);
 		const char *szKey = State.CheckString(1);
 		int iDefaultValue = 0;
-		
-		if(State.CheckNumber(2)) {
-			iDefaultValue = State.CheckNumber(2, iDefaultValue);
-		}
+		State.CheckNumber(2, iDefaultValue);
 		
 		int iResult = ini->GetDoubleValue(szSection, szKey, iDefaultValue);
 
 		SDK::NumberValue Value(iResult);
-		State.Return(iResult);
+		State.Return(Value);
 
 		return true;
 
@@ -475,7 +481,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't load INI file (missing pointer)");
 		}
@@ -483,15 +489,42 @@ void ModuleRegister()
 		const char *szSection = State.CheckString(0);
 		const char *szKey = State.CheckString(1);
 		double fDefaultValue = 0;
-		
-		if(State.CheckNumber(2)) {
-			fDefaultValue = State.CheckNumber(2, fDefaultValue);
-		}
+		State.CheckNumber(2, fDefaultValue);
 		
 		double fResult = ini->GetDoubleValue(szSection, szKey, fDefaultValue);
 
 		SDK::NumberValue Value(fResult);
-		State.Return(fResult);
+		State.Return(Value);
+
+		return true;
+
+		SDK_ENDTRY;
+	});
+	
+	g_pINIFileClass.RegisterFunction("getStringValue", [](Galactic3D::Interfaces::INativeState* pState, int32_t argc, void* pUser) {
+		SDK_TRY;
+
+		SDK::State State(pState);
+		
+		auto pThis = State.CheckThis<CSimpleIni, g_pINIFileClass>();		
+		
+		if (!pThis) {
+			return pState->SetError("[INI] Can't get string value (missing pointer)");
+		}
+
+		CSimpleIni *ini = (CSimpleIni*)pThis;
+		if (!ini) {
+			return pState->SetError("[INI] Can't get string value (missing pointer)");
+		}
+		
+		const char *szSection = State.CheckString(0);
+		const char *szKey = State.CheckString(1);
+		const char *szDefaultValue = State.CheckString(2);
+		
+		const char *szResult = ini->GetValue(szSection, szKey, szDefaultValue);
+
+		SDK::StringValue Value(szResult);
+		State.Return(Value);
 
 		return true;
 
@@ -509,7 +542,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't set boolean value (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't set boolean value (missing pointer)");
 		}
@@ -517,27 +550,26 @@ void ModuleRegister()
 		const char *szSection = State.CheckString(0);
 		const char *szKey = State.CheckString(1);
 		bool bValue = false;
-		if (!State.CheckBoolean(2, bValue)) {
-			return pState->SetError("[INI] Can't set boolean value (missing value)");
-		}
+		State.CheckBoolean(2, bValue);
 		
 		char szComment[128];
 		bool hasComment = false;
 		if (State.CheckString(3)) {
-			strcpy_s(szComment, ";");
+			strcpy(szComment, ";");
 			strcat(szComment, State.CheckString(3));
 
 			hasComment = true;
 		}
 		
 		bool bForceReplace = false;
-		if (!State.CheckBoolean(4, bForceReplace)) {
-			bForceReplace = false;		
-		}
+		State.CheckBoolean(4, bForceReplace);
 		
 		SI_Error result;
-		if (hasComment) result = ini->SetBoolValue(szSection, szKey, bValue, szComment, bForceReplace);
-		else result = ini->SetBoolValue(szSection, szKey, bValue, 0, bForceReplace);
+		if (hasComment) {
+			result = ini->SetBoolValue(szSection, szKey, bValue, szComment, bForceReplace);
+		} else {
+			result = ini->SetBoolValue(szSection, szKey, bValue, 0, bForceReplace);
+		}
 
 		if (result == SI_OK) {
 			SDK::BooleanValue Value(true);
@@ -552,7 +584,7 @@ void ModuleRegister()
 		SDK_ENDTRY;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setIntValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
+	g_pINIFileClass.RegisterFunction("setIntValue", [](Galactic3D::Interfaces::INativeState* pState, int32_t argc, void* pUser) {
 		SDK_TRY;
 
 		SDK::State State(pState);
@@ -563,7 +595,7 @@ void ModuleRegister()
 			return pState->SetError("[INI] Can't set integer value (missing pointer)");
 		}
 
-		CSimpleIni *ini = (CSimpleIni*)pState;
+		CSimpleIni *ini = (CSimpleIni*)pThis;
 		if (!ini) {
 			return pState->SetError("[INI] Can't set integer value (missing pointer)");
 		}
@@ -571,27 +603,26 @@ void ModuleRegister()
 		const char *szSection = State.CheckString(0);
 		const char *szKey = State.CheckString(1);
 		int iValue = 0;
-		if (!State.CheckNumber(2, iValue)) {
-			return pState->SetError("[INI] Can't set integer value (missing value)");
-		}
+		State.CheckNumber(2, iValue);
 		
 		char szComment[128];
 		bool hasComment = false;
 		if (State.CheckString(3)) {
-			strcpy_s(szComment, ";");
+			strcpy(szComment, ";");
 			strcat(szComment, State.CheckString(3));
 
 			hasComment = true;
 		}
 		
+		bool bUseHex = false;
+		State.CheckBoolean(4, bUseHex);		
+		
 		bool bForceReplace = false;
-		if (!State.CheckBoolean(4, bForceReplace)) {
-			bForceReplace = false;		
-		}
+		State.CheckBoolean(5, bForceReplace);
 		
 		SI_Error result;
-		if (hasComment) result = ini->SetBoolValue(szSection, szKey, iValue, szComment, bForceReplace);
-		else result = ini->SetBoolValue(szSection, szKey, iValue, 0, bForceReplace);
+		if (hasComment) result = ini->SetLongValue(szSection, szKey, iValue, szComment, bUseHex, bForceReplace);
+		else result = ini->SetLongValue(szSection, szKey, iValue, 0, bForceReplace);
 
 		if (result == SI_OK) {
 			SDK::BooleanValue Value(true);
@@ -606,108 +637,106 @@ void ModuleRegister()
 		SDK_ENDTRY;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setFloatValue", "", [](GNativeState* pState, int32_t argc, void* pUser) {
-		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
-		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: missing pointer\n");
+	g_pINIFileClass.RegisterFunction("setFloatValue", [](Galactic3D::Interfaces::INativeState* pState, int32_t argc, void* pUser) {
+		SDK_TRY;
+
+		SDK::State State(pState);
+		
+		auto pThis = State.CheckThis<CSimpleIni, g_pINIFileClass>();		
+		
+		if (!pThis) {
+			return pState->SetError("[INI] Can't set float value (missing pointer)");
 		}
 
-		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
-		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: empty sector name\n");
+		CSimpleIni *ini = (CSimpleIni*)pThis;
+		if (!ini) {
+			return pState->SetError("[INI] Can't set float value (missing pointer)");
 		}
-
-		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
-		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: empty key name\n");
-		}
-
-		double nValue = 0.0;
-		if (!Galactic_NativeState_CheckDouble(pState, 2, nValue)) {
-			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: empty float value\n");
-		}
-
+		
+		const char *szSection = State.CheckString(0);
+		const char *szKey = State.CheckString(1);
+		double fValue = 0;
+		State.CheckNumber(2, fValue);
+		
 		char szComment[128];
 		bool hasComment = false;
-		if (Galactic_NativeState_CheckString(pState, 3)) {
-			strcpy_s(szComment, ";");
-			strcat(szComment, Galactic_NativeState_CheckString(pState, 3));
+		if (State.CheckString(3)) {
+			strcpy(szComment, ";");
+			strcat(szComment, State.CheckString(3));
 
 			hasComment = true;
 		}
-
+		
 		bool bForceReplace = false;
-		if (!Galactic_NativeState_CheckBoolean(pState, 4, bForceReplace)) bForceReplace = false;
-
-		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
-		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "ini.setFloatValue: missing pointer\n");
-		}
-
+		State.CheckBoolean(4, bForceReplace);
+		
 		SI_Error result;
-		if (hasComment) result = ini->SetDoubleValue(szSection, szKey, nValue, szComment, bForceReplace);
-		else result = ini->SetDoubleValue(szSection, szKey, nValue, 0, bForceReplace);
+		if (hasComment) result = ini->SetDoubleValue(szSection, szKey, fValue, szComment, bForceReplace);
+		else result = ini->SetDoubleValue(szSection, szKey, fValue, 0, bForceReplace);
 
-		if (result == SI_OK) Galactic_NativeState_ReturnBoolean(pState, true);
-		else Galactic_NativeState_ReturnBoolean(pState, false);
+		if (result == SI_OK) {
+			SDK::BooleanValue Value(true);
+			State.Return(Value);
+		} else {
+			SDK::BooleanValue Value(false);
+			State.Return(Value);			
+		}
 
 		return true;
+
+		SDK_ENDTRY;
 	});
 
-	Galactic_ReflectedClass_RegisterFunction(g_pINIFileClass, "setString", "", [](GNativeState* pState, int32_t argc, void* pUser) {
-		GRefCounted *pINIRef = Galactic_NativeState_GetThis(pState, g_pINIFileClass);
-		if (!pINIRef) {
-			return Galactic_NativeState_SetError(pState, "ini.setString: missing pointer\n");
+	g_pINIFileClass.RegisterFunction("setStringValue", [](Galactic3D::Interfaces::INativeState* pState, int32_t argc, void* pUser) {
+		SDK_TRY;
+
+		SDK::State State(pState);
+		
+		auto pThis = State.CheckThis<CSimpleIni, g_pINIFileClass>();		
+		
+		if (!pThis) {
+			return pState->SetError("[INI] Can't set string value (missing pointer)");
 		}
 
-		const char *szSection = Galactic_NativeState_CheckString(pState, 0);
-		if (!szSection) {
-			return Galactic_NativeState_SetError(pState, "ini.setString: empty sector name\n");
+		CSimpleIni *ini = (CSimpleIni*)pThis;
+		if (!ini) {
+			return pState->SetError("[INI] Can't set string value (missing pointer)");
 		}
-
-		const char *szKey = Galactic_NativeState_CheckString(pState, 1);
-		if (!szKey) {
-			return Galactic_NativeState_SetError(pState, "ini.setString: empty key name\n");
-		}
-
-		const char *szValue = Galactic_NativeState_CheckString(pState, 2);
-		if (!szValue) {
-			return Galactic_NativeState_SetError(pState, "ini.setString: empty string value\n");
-		}
-
+		
+		const char *szSection = State.CheckString(0);
+		const char *szKey = State.CheckString(1);
+		const char *szValue = State.CheckString(2);
+		
 		char szComment[128];
 		bool hasComment = false;
-		if (Galactic_NativeState_CheckString(pState, 3)) {
-			strcpy_s(szComment, ";");
-			strcat(szComment, Galactic_NativeState_CheckString(pState, 3));
+		if (State.CheckString(3)) {
+			strcpy(szComment, ";");
+			strcat(szComment, State.CheckString(3));
 
 			hasComment = true;
 		}
-
+		
 		bool bForceReplace = false;
-		if (!Galactic_NativeState_CheckBoolean(pState, 4, bForceReplace)) bForceReplace = false;
-
-		CSimpleIni *ini = (CSimpleIni*)Galactic_Referenceable_GetPrivate(pINIRef);
-		if (!ini) {
-			return Galactic_NativeState_SetError(pState, "ini.setString: missing pointer\n");
-		}
-
+		State.CheckBoolean(4, bForceReplace);
+		
 		SI_Error result;
 		if (hasComment) result = ini->SetValue(szSection, szKey, szValue, szComment, bForceReplace);
 		else result = ini->SetValue(szSection, szKey, szValue, 0, bForceReplace);
 
-		if (result == SI_OK) Galactic_NativeState_ReturnBoolean(pState, true);
-		else Galactic_NativeState_ReturnBoolean(pState, false);
+		if (result == SI_OK) {
+			SDK::BooleanValue Value(true);
+			State.Return(Value);
+		} else {
+			SDK::BooleanValue Value(false);
+			State.Return(Value);			
+		}
 
 		return true;
+
+		SDK_ENDTRY;
 	});
-
-	printf("[INI] Module loaded \n");
-	printf("[INI] Build date: %s \n", __DATE__);
-
-	return nullptr;
 }
 
-extern "C" __declspec(dllexport) void _cdecl UnregisterModule(void* pUser)
+void ModuleUnregister()
 {
 }
